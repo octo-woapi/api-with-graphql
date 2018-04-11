@@ -1,12 +1,5 @@
-function alreadyExist (fileHandler) {
-    return (id) => {
-        const list = fileHandler.read()
-        return list.some((obj) => obj.id === id)
-    }
+function alreadyExist(list, id) {
+    return list.some((obj) => { return obj.id === id})
 }
 
-module.exports = (fileHandler) => {
-    return {
-        alreadyExist: alreadyExist(fileHandler)
-    }
-}
+module.exports = alreadyExist

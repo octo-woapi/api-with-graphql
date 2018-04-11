@@ -18,9 +18,9 @@ const {productResolver, productsResolver, Product} = require('../products/' +
   'productsResolver')(fileHandlers.products, pagination, getProductsById)
 const {orderResolver, ordersResolver} = require('../orders/' +
   'ordersResolver')(fileHandlers.orders, pagination, getOrdersById, Product)
-const {alreadyExist} = require('../server/validator/alreadyExist')(fileHandlers.products)
+const alreadyExist = require('../server/validator/alreadyExist')
 const addProduct = require('../products/usecase/add')(fileHandlers.products, alreadyExist, Product).add
-const updateProduct = require('../products/usecase/update')(fileHandlers.products).update
+const updateProduct = require('../products/usecase/update')(fileHandlers.products, Product).update
 
 const resolvers = {
   Query: {
@@ -32,9 +32,7 @@ const resolvers = {
   },
   Mutation: {
     createProduct: async (_, {name, price, weight}) => {
-      console.log('here')
       const product = await addProduct(name, price, weight)
-      console.log(product)
       return product
     },
     updateProduct: (_, {id, name, price, weight}) => {

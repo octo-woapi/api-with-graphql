@@ -3,7 +3,7 @@ function add (fileHandler, alreadyExist, Product) {
     return new Promise(async (resolve) => {
       const productsList = fileHandler.read()
       let id = 0
-      while (alreadyExist(id)) { id ++ }
+      while (alreadyExist(productsList, id)) { id ++ }
       productsList.push({
         'id': id,
         'name': name,
