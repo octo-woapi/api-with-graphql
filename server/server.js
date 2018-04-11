@@ -50,14 +50,9 @@ var express = require('express')
 var graphqlHTTP = require('express-graphql')
 
 var app = express()
-app.use('/graphql', logRequest, graphqlHTTP({
+app.use('/graphql', graphqlHTTP({
   schema: schema,
   graphiql: true,
 }))
-
-function logRequest(req, res, next) {
-  console.log(req)
-  next()
-}
 
 module.exports = app

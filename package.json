@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "NODE_ENV=test jest test",
-    "watch": "nodemon index.js",
-    "start": "node index.js"
+    "watch": "nodemon index.js"
   },
   "keywords": [],
   "author": "",
@@ -25,7 +24,6 @@
     "bail": true
   },
   "devDependencies": {
-    "nodemon": "^1.17.2",
-    "supertest": "^3.0.0"
+    "nodemon": "^1.17.2"
   }
 }
