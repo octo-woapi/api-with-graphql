@@ -5,6 +5,7 @@ const pagination = require('./tools/pagination')
 
 const env = process.env.NODE_ENV || 'development'
 const conf = require('./conf')[env]
+console.log(conf)
 
 const fileHandlers = {
   orders: fileHandler(conf.data.orders),
