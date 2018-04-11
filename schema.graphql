@@ -12,9 +12,14 @@ type Product {
     price: Float
 }
 
+type OrderedProduct {
+    product : Product
+    quantity : Int
+}
+
 type Order {
     id: Int!
-    productsList: [Product]!
+    productsList: [OrderedProduct]!
     shipmentAmount: Float
     totalAmount: Float
     weight: Float
