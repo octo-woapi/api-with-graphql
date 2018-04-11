@@ -1,0 +1,26 @@
+type Query {
+    hello(id: Int): String
+    product(id: Int!): Product
+    order(id: Int!): Order
+    products(after: Int, first: Int): [Product]
+    orders(after: Int, first: Int): [Order]
+}
+type Product {
+    id: Int!
+    name: String!
+    weight: Float
+    price: Float
+}
+
+type Order {
+    id: Int!
+    productsList: [Product]!
+    shipmentAmount: Float
+    totalAmount: Float
+    weight: Float
+}
+
+type Mutation {
+    createProduct(name: String!, price: Float, weight: Float): Product
+    updateProduct(id: ID!, name: String, price: Float, weight: Float): Product
+}
