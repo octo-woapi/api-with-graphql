@@ -2,10 +2,10 @@ const {importSchema} = require('graphql-import')
 const {makeExecutableSchema} = require('graphql-tools')
 const fileHandler = require('./tools/fileHandler')
 const pagination = require('./tools/pagination')
+const path = require('path')
 
 const env = process.env.NODE_ENV || 'development'
 const conf = require('./conf')[env]
-console.log(env)
 
 const fileHandlers = {
   orders: fileHandler(conf.data.orders),
@@ -43,7 +43,7 @@ const resolvers = {
   }
 }
 
-const typeDefs = importSchema('/Users/romaincalamier/api-poc-graphql/schema.graphql')
+const typeDefs = importSchema(path.resolve(__dirname, `../schema.graphql`))
 
 const schema = makeExecutableSchema({typeDefs, resolvers})
 
