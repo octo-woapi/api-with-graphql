@@ -9,18 +9,26 @@ const conf = require('./conf')[env]
 
 const fileHandlers = {
   orders: fileHandler(conf.data.orders),
-  products: fileHandler(conf.data.products)
+  products: fileHandler(conf.data.products),
+  bills: fileHandler(conf.data.bills)
 }
 
-const getProductsById = require('../products/usecase/getById')(fileHandlers.products).getById
-const getOrdersById = require('../orders/usecase/getById')(fileHandlers.orders).getById
-const {productResolver, productsResolver, Product} = require('../products/' +
-  'productsResolver')(fileHandlers.products, pagination, getProductsById)
+const {Product, Order, Bill, OrderedProduct} = require('./types/graphqlObjectType')
+
+const getProductById = require('../products/usecase/getById')(fileHandlers.products).getById
+const getOrderById = require('../orders/usecase/getById')(fileHandlers.orders).getById
+const getBillById = require('../orders/usecase/getById')(fileHandlers.bills).getById
+
+const {productResolver, productsResolver} = require('../products/' +
+  'productsResolver')(fileHandlers.products, Product, pagination, getProductById)
 const {orderResolver, ordersResolver} = require('../orders/' +
-  'ordersResolver')(fileHandlers.orders, pagination, getOrdersById, Product)
+  'ordersResolver')(fileHandlers.orders, Order, OrderedProduct, pagination, getOrderById, Product)
+const {billResolver, billListResolver} = require('../bills/billsResolver')(fileHandlers.bills, Bill, pagination,
+  getBillById)
 const alreadyExist = require('../server/validator/alreadyExist')
 const addProduct = require('../products/usecase/add')(fileHandlers.products, alreadyExist, Product).add
 const updateProduct = require('../products/usecase/update')(fileHandlers.products, Product).update
+const {Date} = require('./types/customScalarType')
 
 const resolvers = {
   Query: {
@@ -28,7 +36,9 @@ const resolvers = {
     product: (_, {id}) => productResolver(id),
     products: (_, {first, after}) => productsResolver(first, after),
     order: (_, {id}) => orderResolver(id),
-    orders: (_, {first, after}) => ordersResolver(first, after)
+    orders: (_, {first, after}) => ordersResolver(first, after),
+    bill: (_, {id}) => billResolver(id),
+    bills: (_, {first, after}) => billListResolver(first, after)
   },
   Mutation: {
     createProduct: async (_, {name, price, weight}) => {
@@ -38,7 +48,8 @@ const resolvers = {
     updateProduct: (_, {id, name, price, weight}) => {
       return updateProduct(id, name, price, weight)
     }
-  }
+  },
+  Date: Date
 }
 
 const typeDefs = importSchema(path.resolve(__dirname, `../schema.graphql`))

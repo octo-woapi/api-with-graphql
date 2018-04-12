@@ -6,7 +6,7 @@ startApi(PORT)
 
 beforeAll(async () => {
     await deleteAllOrders()
-    await addOrder(1, {id: 1, productsList: [{id: 1, name: 'orange', quantity: 100}]})
+    await addOrder([{id: 1, name: 'orange', quantity: 100}])
 })
 
 afterAll(() => {
@@ -49,7 +49,7 @@ describe('Query', () => {
         })
         describe('when after is called', () => {
             it('returns orders list from the order whose name is after', (done) => {
-                const after = 1
+                const after = 0
                 request({url: `http://localhost:${PORT}/graphql`, method: 'POST',
                     json: {"query": `{orders(after:${after}){id}}`}}, (err, res) => {
                     if (err) console.log(err)
@@ -65,7 +65,7 @@ describe('Query', () => {
                 request({url: `http://localhost:${PORT}/graphql`, method: 'POST',
                     json: {"query": `{orders(first:${first}, after:${after}){id}}`}}, (err, res) => {
                     if (err) console.log(err)
-                    expect(res.body.data.orders).toEqual([{"id": 1}])
+                    expect(res.body.data.orders).toEqual([{"id": 0}])
                     done()
                 })
             })

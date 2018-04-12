@@ -10,17 +10,19 @@ const fileHandlers = {
   bills: fileHandler(conf.data.bills)
 }
 const getProductById = require('../products/usecase/getById')(fileHandlers.products).getById
+const getOrderById = require('../orders/usecase/getById')(fileHandlers.orders).getById
 const {updateTotals} = require('../orders/domain/updateTotals')(getProductById)
 const {updateTotalsList} = require('../orders/domain/updateTotalsList')(updateTotals)
-const {alreadyExist} = require('../server/validator/alreadyExist')(fileHandlers.products)
-const {Product} = require('../products/productsResolver')(fileHandlers.products)
+const alreadyExist = require('../server/validator/alreadyExist')
+const {Product, Order} = require('../server/types/graphqlObjectType')
 
-const addBill = require('../bills/usecase/add')(fileHandlers.bills).add
 const deleteAllBills = require('../server/tools/deleteAll')(fileHandlers.bills).deleteAll
-const addOrder = require('../orders/usecase/add')(fileHandlers.orders, updateTotalsList).add
+const addOrder = require('../orders/usecase/add')(fileHandlers.orders, Order, alreadyExist, updateTotalsList).add
 const deleteAllOrders = require('../server/tools/deleteAll')(fileHandlers.orders).deleteAll
 const addProduct = require('../products/usecase/add')(fileHandlers.products, alreadyExist, Product).add
 const deleteAllProducts = require('../server/tools/deleteAll')(fileHandlers.products).deleteAll
+const createBill = require('../bills/usecase/add')(fileHandlers.bills, getOrderById).add
+const updateOrder = require('../orders/usecase/update')(fileHandlers.orders, updateTotalsList, createBill).update
 
 const startApi = (PORT) => {
   beforeAll((done) => {
@@ -39,5 +41,5 @@ module.exports = {
   deleteAllOrders,
   addOrder,
   deleteAllBills,
-  addBill
+  updateOrder
 }

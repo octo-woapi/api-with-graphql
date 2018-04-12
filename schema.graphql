@@ -4,7 +4,15 @@ type Query {
     order(id: Int!): Order
     products(after: Int, first: Int): [Product]
     orders(after: Int, first: Int): [Order]
+    bill(id: Int!): Bill
+    bills(after: Int, first: Int): [Bill]
 }
+
+type Mutation {
+    createProduct(name: String!, price: Float, weight: Float): Product
+    updateProduct(id: ID!, name: String, price: Float, weight: Float): Product
+}
+
 type Product {
     id: Int!
     name: String!
@@ -12,20 +20,25 @@ type Product {
     price: Float
 }
 
-type OrderedProduct {
-    product : Product
-    quantity : Int
-}
-
 type Order {
     id: Int!
     productsList: [OrderedProduct]!
+    status: String!
     shipmentAmount: Float
     totalAmount: Float
     weight: Float
 }
 
-type Mutation {
-    createProduct(name: String!, price: Float, weight: Float): Product
-    updateProduct(id: ID!, name: String, price: Float, weight: Float): Product
+type OrderedProduct {
+    product : Product
+    quantity : Int
+}
+
+scalar Date
+
+type Bill {
+    id: Int!
+    createdAt: Date!
+    orderId: Int!
+    amount: Float!
 }

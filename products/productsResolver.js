@@ -1,21 +1,11 @@
-class Product {
-    constructor(id, name, weight, price, quantity) {
-        this.id = id
-        this.name = name
-        this.weight = weight
-        this.price = price
-        this.quantity = quantity
-    }
-}
-
-function productResolver (fileHandler, getById) {
+function productResolver (fileHandler, Product, getById) {
     return (id) => {
         const product = getById(id)
         return new Product(id, product.name, product.weight, product.price)
     }
 }
 
-function productsResolver (fileHandler, pagination) {
+function productsResolver (fileHandler, Product, pagination) {
     return (first, after) => {
         const products = []
         fileHandler.read().forEach((product) => {
@@ -25,10 +15,9 @@ function productsResolver (fileHandler, pagination) {
     }
 }
 
-module.exports = (fileHandler, pagination, getById) => {
+module.exports = (fileHandler, Product, pagination, getById) => {
     return {
-        productResolver: productResolver(fileHandler,getById),
-        productsResolver: productsResolver(fileHandler, pagination),
-        Product
+        productResolver: productResolver(fileHandler, Product, getById),
+        productsResolver: productsResolver(fileHandler, Product, pagination),
     }
 }

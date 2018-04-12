@@ -1,18 +1,19 @@
 function update (fileHandler, updateTotalsList, createBill) {
   return (orderId, orderData) => {
-    let orders = fileHandler.read()
-    const orderIndex = orders.findIndex((order) => {
-      return order.id === parseInt(orderId)
+    return new Promise(async (resolve) => {
+      let orders = fileHandler.read()
+      const orderIndex = orders.findIndex((order) => {
+        return order.id === parseInt(orderId)
+      })
+      const statusBefore = orders[orderIndex].status
+      Object.assign(orders[orderIndex], orderData)
+      await fileHandler.write(orders)
+      orders = updateTotalsList(orders)
+      if (statusBefore === 'pending' && orderData.status === 'paid') {
+        await createBill(orderId)
+      }
+      resolve(orders)
     })
-    const statusBefore = orders[orderIndex]
-    Object.assign(orders[orderIndex], orderData)
-    fileHandler.write(orders)
-    orders = updateTotalsList(orders)
-    if (statusBefore === 'pending' && orderData.status === 'paid') {
-      createBill(orderId)
-      console.log(2)
-    }
-    return orders
   }
 }
 

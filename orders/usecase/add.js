@@ -1,14 +1,19 @@
-function add (fileHandler, updateTotalsList) {
-  return (orderId, orderData) => {
-    const orders = fileHandler.read()
-    orders.push({id: orderId, productsList: orderData.productsList, status: 'pending'})
-    fileHandler.write(updateTotalsList(orders))
-    return updateTotalsList(orders)
+function add (fileHandler, Order, alreadyExist, updateTotalsList) {
+  return (productsList) => {
+    return new Promise(async (resolve) => {
+      let orders = fileHandler.read()
+      let id = 0
+      while (alreadyExist(orders, id)) { id ++ }
+      orders.push({id: id, productsList: productsList, status: 'pending'})
+      orders = updateTotalsList(orders)
+      await fileHandler.write(orders)
+      resolve(new Order(id, productsList, 'pending'))
+    })
   }
 }
 
-module.exports = (fileHandler, updateTotalsList) => {
+module.exports = (fileHandler, Order, alreadyExist, updateTotalsList) => {
   return {
-    add: add(fileHandler, updateTotalsList)
+    add: add(fileHandler, Order, alreadyExist, updateTotalsList)
   }
 }
