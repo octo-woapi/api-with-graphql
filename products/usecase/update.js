@@ -1,4 +1,4 @@
-function update(fileHandler, Product) {
+function update(fileHandler, {Product}) {
   return async (id, name, price, weight) => {
     if (!id) {
       throw new InvalidIdError('ID undefined')
@@ -21,9 +21,9 @@ function update(fileHandler, Product) {
 class InvalidIdError extends Error {
 }
 
-module.exports = (fileHandler, Product) => {
+module.exports = (fileHandler, type) => {
   return {
-    update: update(fileHandler, Product),
+    update: update(fileHandler, type),
     InvalidIdError
   }
 }

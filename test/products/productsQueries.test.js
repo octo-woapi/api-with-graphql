@@ -115,7 +115,6 @@ describe('Products', () => {
             body: data
           }, (err, res) => {
             if (err) console.log(err)
-            console.log(res.body)
             expect(res.body.errors[0].message).toEqual('The product does not exist')
             done()
           })
@@ -136,7 +135,6 @@ describe('Products', () => {
             body: data
           }, (err, res) => {
             if (err) console.log(err)
-            console.log(res.body)
             expect(res.body.data.updateProduct).toEqual(newProduct)
             done()
           })
@@ -157,7 +155,6 @@ describe('Products', () => {
             body: data
           }, (err, res) => {
             if (err) console.log(err)
-            console.log(res.body)
             expect(res.body.data.deleteProduct[0].id).toEqual(1)
             done()
           })

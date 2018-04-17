@@ -12,6 +12,7 @@ type Mutation {
     createProduct(name: String!, price: Float, weight: Float): Product
     updateProduct(id: ID!, name: String, price: Float, weight: Float): Product
     deleteProduct(id: ID!): [Product]
+    createOrder(productId: Int!, quantity: Int!): [Order]
 }
 
 type Product {

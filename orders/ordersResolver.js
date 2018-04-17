@@ -1,4 +1,4 @@
-function orderResolver(fileHandler, Order, OrderedProduct, getById, Product) {
+function orderResolver(fileHandler, {Order, OrderedProduct, Product}, getById) {
   return (id) => {
     const order = getById(id)
     const productsList = order.productsList.map((product) => {
@@ -10,7 +10,7 @@ function orderResolver(fileHandler, Order, OrderedProduct, getById, Product) {
   }
 }
 
-function ordersResolver(fileHandler, Order, OrderedProduct, pagination, Product) {
+function ordersResolver(fileHandler, {Order, OrderedProduct, Product}, pagination) {
   return (first, after) => {
     const orders = fileHandler.read().map((order) => {
       const productsList = order.productsList.map((product) => {
@@ -24,10 +24,9 @@ function ordersResolver(fileHandler, Order, OrderedProduct, pagination, Product)
   }
 }
 
-module.exports = (fileHandler, Order, OrderedProduct, pagination, getById, Product) => {
+module.exports = (fileHandler, type, pagination, getById) => {
   return {
-    orderResolver: orderResolver(fileHandler, Order, OrderedProduct, getById, Product),
-    ordersResolver: ordersResolver(fileHandler, Order, OrderedProduct, pagination, Product),
-    Order
+    orderResolver: orderResolver(fileHandler, type, getById),
+    ordersResolver: ordersResolver(fileHandler, type, pagination)
   }
 }

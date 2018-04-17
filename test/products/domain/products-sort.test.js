@@ -11,7 +11,6 @@ describe('sort(:property)', () => {
           {'id': 2, 'name': 'vanilla', 'price': 10, 'weight': 0.01}]
       )}}
       const products = get(fileHandlers.products).products
-      console.log(products)
       expect(products.sort(sort('price'))).toEqual([
         {'id': 1, 'name': 'orange', 'price': 1.5, 'weight': 0.3},
         {'id': 0, 'name': 'banana', 'price': 2, 'weight': 0.2},

@@ -14,12 +14,12 @@ const getOrderById = require('../orders/usecase/getById')(fileHandlers.orders).g
 const {updateTotals} = require('../orders/domain/updateTotals')(getProductById)
 const {updateTotalsList} = require('../orders/domain/updateTotalsList')(updateTotals)
 const alreadyExist = require('../server/validator/alreadyExist')
-const {Product, Order} = require('../server/types/graphqlObjectType')
+const type = require('../server/types/graphqlObjectType')
 
 const deleteAllBills = require('../server/tools/deleteAll')(fileHandlers.bills).deleteAll
-const addOrder = require('../orders/usecase/add')(fileHandlers.orders, Order, alreadyExist, updateTotalsList).add
+const addOrder = require('../orders/usecase/add')(fileHandlers.orders, type, alreadyExist, updateTotalsList).add
 const deleteAllOrders = require('../server/tools/deleteAll')(fileHandlers.orders).deleteAll
-const addProduct = require('../products/usecase/add')(fileHandlers.products, alreadyExist, Product).add
+const addProduct = require('../products/usecase/add')(fileHandlers.products, alreadyExist, type).add
 const deleteAllProducts = require('../server/tools/deleteAll')(fileHandlers.products).deleteAll
 const createBill = require('../bills/usecase/add')(fileHandlers.bills, getOrderById).add
 const updateOrder = require('../orders/usecase/update')(fileHandlers.orders, updateTotalsList, createBill).update

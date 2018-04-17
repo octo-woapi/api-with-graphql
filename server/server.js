@@ -13,22 +13,25 @@ const fileHandlers = {
   bills: fileHandler(conf.data.bills)
 }
 
-const {Product, Order, Bill, OrderedProduct} = require('./types/graphqlObjectType')
+const type = require('./types/graphqlObjectType')
 
 const getProductById = require('../products/usecase/getById')(fileHandlers.products).getById
 const getOrderById = require('../orders/usecase/getById')(fileHandlers.orders).getById
 const getBillById = require('../orders/usecase/getById')(fileHandlers.bills).getById
 
 const {productResolver, productsResolver} = require('../products/' +
-  'productsResolver')(fileHandlers.products, Product, pagination, getProductById)
+  'productsResolver')(fileHandlers.products, type, pagination, getProductById)
 const {orderResolver, ordersResolver} = require('../orders/' +
-  'ordersResolver')(fileHandlers.orders, Order, OrderedProduct, pagination, getOrderById, Product)
-const {billResolver, billListResolver} = require('../bills/billsResolver')(fileHandlers.bills, Bill, pagination,
+  'ordersResolver')(fileHandlers.orders, type, pagination, getOrderById)
+const {billResolver, billListResolver} = require('../bills/billsResolver')(fileHandlers.bills, type, pagination,
   getBillById)
 const alreadyExist = require('../server/validator/alreadyExist')
-const addProduct = require('../products/usecase/add')(fileHandlers.products, alreadyExist, Product).add
-const updateProduct = require('../products/usecase/update')(fileHandlers.products, Product).update
-const {deleteProduct} = require('../products/usecase/delete')(fileHandlers.products, Product)
+const {updateTotals} = require('../orders/domain/updateTotals')(getProductById)
+const {updateTotalsList} = require('../orders/domain/updateTotalsList')(updateTotals)
+const addProduct = require('../products/usecase/add')(fileHandlers.products, alreadyExist, type).add
+const updateProduct = require('../products/usecase/update')(fileHandlers.products, type).update
+const {deleteProduct} = require('../products/usecase/delete')(fileHandlers.products, type)
+const addOrder = require('../orders/usecase/add')(fileHandlers.orders, type, alreadyExist, updateTotalsList).add
 const {Date} = require('./types/customScalarType')
 
 const resolvers = {
@@ -55,6 +58,9 @@ const resolvers = {
     },
     deleteProduct: (_, {id}) => {
       return deleteProduct(id)
+    },
+    createOrder: (_, {productId, quantity}) => {
+      return addOrder(productId, quantity)
     }
   },
   Date: Date

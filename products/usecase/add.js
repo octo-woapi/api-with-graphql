@@ -1,4 +1,4 @@
-function add(fileHandler, alreadyExist, Product) {
+function add(fileHandler, alreadyExist, {Product}) {
   return async (name, price, weight) => {
     const productsList = fileHandler.read()
     let id = 0

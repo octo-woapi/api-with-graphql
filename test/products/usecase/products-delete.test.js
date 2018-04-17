@@ -1,5 +1,14 @@
 const deleteProductModule = require('../../../products/usecase/delete')
 
+class Product {
+  constructor(id, name, weight, price) {
+    this.id = id
+    this.name = name
+    this.weight = weight
+    this.price = price
+  }
+}
+
 describe('deleteProduct(:id)', () => {
   describe('when id is undefined', () => {
     it('return list without deleting', () => {
@@ -7,7 +16,7 @@ describe('deleteProduct(:id)', () => {
       const fileHandlers = {
         products: {read: jest.fn(() => [product]), write: jest.fn()}
       }
-      const {deleteProduct} = deleteProductModule(fileHandlers.products)
+      const {deleteProduct} = deleteProductModule(fileHandlers.products, {Product})
       const result = deleteProduct(null)
       expect(result).toEqual([product])
     })
@@ -18,7 +27,7 @@ describe('deleteProduct(:id)', () => {
       const fileHandlers = {
         products: {read: jest.fn(() => [product]), write: jest.fn()}
       }
-      const {deleteProduct} = deleteProductModule(fileHandlers.products)
+      const {deleteProduct} = deleteProductModule(fileHandlers.products, {Product})
       const result = deleteProduct(3)
       expect(result).toEqual([product])
     })
@@ -29,7 +38,7 @@ describe('deleteProduct(:id)', () => {
       const fileHandlers = {
         products: {read: jest.fn(() => [product]), write: jest.fn()}
       }
-      const {deleteProduct} = deleteProductModule(fileHandlers.products)
+      const {deleteProduct} = deleteProductModule(fileHandlers.products, {Product})
       const result = deleteProduct(1)
       expect(result).toEqual([])
     })
