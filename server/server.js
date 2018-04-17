@@ -28,6 +28,7 @@ const {billResolver, billListResolver} = require('../bills/billsResolver')(fileH
 const alreadyExist = require('../server/validator/alreadyExist')
 const addProduct = require('../products/usecase/add')(fileHandlers.products, alreadyExist, Product).add
 const updateProduct = require('../products/usecase/update')(fileHandlers.products, Product).update
+const {deleteProduct} = require('../products/usecase/delete')(fileHandlers.products, Product)
 const {Date} = require('./types/customScalarType')
 
 const resolvers = {
@@ -46,7 +47,14 @@ const resolvers = {
       return product
     },
     updateProduct: (_, {id, name, price, weight}) => {
-      return updateProduct(id, name, price, weight)
+      try {
+        return updateProduct(id, name, price, weight)
+      } catch (e) {
+        return e
+      }
+    },
+    deleteProduct: (_, {id}) => {
+      return deleteProduct(id)
     }
   },
   Date: Date
@@ -56,13 +64,14 @@ const typeDefs = importSchema(path.resolve(__dirname, `../schema.graphql`))
 
 const schema = makeExecutableSchema({typeDefs, resolvers})
 
-var express = require('express')
-var graphqlHTTP = require('express-graphql')
+const express = require('express')
+const graphqlHTTP = require('express-graphql')
 
-var app = express()
-app.use('/graphql', graphqlHTTP({
+const app = express();
+
+app.use('/graphql', graphqlHTTP((request) => ({
   schema: schema,
-  graphiql: true,
-}))
+  graphiql: true
+})))
 
 module.exports = app

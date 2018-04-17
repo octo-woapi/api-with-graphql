@@ -1,6 +1,6 @@
 function deleteAll (fileHandler) {
   return () => {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       resolve(fileHandler.write([]))
     })
   }
