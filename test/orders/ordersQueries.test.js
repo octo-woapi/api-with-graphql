@@ -1,11 +1,12 @@
 const request = require('request')
-const {startApi, deleteAllOrders, addOrder} = require('../helpers')
+const {startApi, deleteAllOrders, deleteAllBills, addOrder} = require('../helpers')
 const PORT = 4000
 
 startApi(PORT)
 
 beforeAll(async () => {
   await deleteAllOrders()
+  await deleteAllBills()
   await addOrder(1, 100)
 })
 
@@ -16,7 +17,7 @@ afterAll(() => {
 const fileHandler = require('../../server/tools/fileHandler')
 const conf = require('../../server/conf')['test']
 
-const fileHandlers = {orders: fileHandler(conf.data.orders)}
+const fileHandlers = {orders: fileHandler(conf.data.orders), bills: fileHandler((conf.data.bills))}
 
 describe('Query', () => {
   describe('orders', () => {
@@ -98,6 +99,54 @@ describe('Mutation', () => {
           console.log(res.body.data.createOrder[0])
           expect(res.body.data.createOrder[0].productsList[0].product.id).toEqual(1)
           done()
+        })
+      })
+    })
+  })
+  describe('updateStatus', () => {
+    describe('when order does not exist', () => {
+      it('throws an error', (done) => {
+        const invalidId = 5
+        const data = {"query": `mutation {updateStatus(orderId: ${invalidId}, status: "paid") {id}}`}
+        request({
+          url: `http://localhost:${PORT}/graphql`,
+          method: "POST",
+          json: data
+        }, (err, res) => {
+          if (err) console.log(err)
+          expect(res.body.errors[0].message).toEqual(`Order with the id: ${invalidId} is undefined`)
+          done()
+        })
+      })
+    })
+    describe('when everything is fine', () => {
+      it('returns orders updated', (done) => {
+        const newStatus = 'paid'
+        const data = {"query": `mutation {updateStatus(orderId: 0, status: "${newStatus}") {status}}`}
+        request({
+          url: `http://localhost:${PORT}/graphql`,
+          method: "POST",
+          json: data
+        }, (err, res) => {
+          if (err) console.log(err)
+          expect(res.body.data.updateStatus[0].status).toEqual(newStatus)
+          done()
+        })
+      })
+      describe('when status is set from pending to paid', () => {
+        it('creates a new bill', (done) => {
+          const newStatus = 'paid'
+          const data = {"query": `mutation {updateStatus(orderId: 0, status: "${newStatus}") {status}}`}
+          request({
+            url: `http://localhost:${PORT}/graphql`,
+            method: "POST",
+            json: data
+          }, (err, res) => {
+            if (err) console.log(err)
+            console.log(fileHandlers.bills.read())
+            expect(fileHandlers.bills.read().length).toEqual(1)
+            done()
+          })
         })
       })
     })

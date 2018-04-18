@@ -8,7 +8,6 @@ function add(fileHandler, alreadyExist, updateTotalsList) {
     orders.push({id: id, productsList: [{product: {id: productId}, quantity: quantity}], status: 'pending'})
     orders = updateTotalsList(orders)
     await fileHandler.write(orders)
-    console.log(orders[0].productsList)
     return orders
   }
 }

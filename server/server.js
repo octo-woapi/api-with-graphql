@@ -60,6 +60,9 @@ const resolvers = {
     },
     createOrder: (_, {productId, quantity}) => {
       return addOrder(productId, quantity)
+    },
+    updateStatus: (_, {orderId, status}) => {
+      return updateOrder(orderId, {status: status})
     }
   },
   Date: Date
@@ -79,4 +82,6 @@ app.use('/graphql', graphqlHTTP({
   graphiql: true
 }))
 
-module.exports = app
+const server = require('http').createServer(app)
+
+module.exports = server

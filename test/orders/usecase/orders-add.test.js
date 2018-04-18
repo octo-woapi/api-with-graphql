@@ -3,9 +3,7 @@ const fileHandlers = {orders: {read: jest.fn(() => []),
 const updateTotalsList = jest.fn((orders) => orders)
 const alreadyExist = jest.fn(() => false)
 
-const types = require('../../../server/types/graphqlObjectType')
-
-const {add} = require('../../../orders/usecase/add')(fileHandlers.orders, types, alreadyExist, updateTotalsList)
+const {add} = require('../../../orders/usecase/add')(fileHandlers.orders, alreadyExist, updateTotalsList)
 
 describe(':add(orderId, orderData, orders)', () => {
   describe('When everything fine', () => {

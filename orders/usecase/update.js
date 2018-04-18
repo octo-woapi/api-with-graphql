@@ -4,6 +4,7 @@ function update(fileHandler, updateTotalsList, createBill) {
     const orderIndex = orders.findIndex((order) => {
       return order.id === parseInt(orderId)
     })
+    if (orderIndex === -1) throw new InvalidOrderIdError(`Order with the id: ${orderId} is undefined`)
     const statusBefore = orders[orderIndex].status
     Object.assign(orders[orderIndex], orderData)
     orders = updateTotalsList(orders)
@@ -15,8 +16,11 @@ function update(fileHandler, updateTotalsList, createBill) {
   }
 }
 
+class InvalidOrderIdError extends Error {}
+
 module.exports = (fileHandler, updateTotalsList, createBill) => {
   return {
-    update: update(fileHandler, updateTotalsList, createBill)
+    update: update(fileHandler, updateTotalsList, createBill),
+    InvalidOrderIdError
   }
 }

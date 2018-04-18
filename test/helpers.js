@@ -25,14 +25,11 @@ const updateOrder = require('../orders/usecase/update')(fileHandlers.orders, upd
 
 const startApi = (PORT) => {
   beforeAll((done) => {
-    console.log(1)
     server.listen(PORT, done)
   })
 
-  afterAll((done) => {
-    console.log(2)
-    server.close(done)
-    console.log(3)
+  afterAll(() => {
+    server.close()
   })
 }
 
