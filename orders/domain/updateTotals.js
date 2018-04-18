@@ -2,9 +2,9 @@ function updateTotals (getProductById) {
   return (order) => {
     order.weight = 0
     order.price = 0
-    const productsInfo = order.productsList.map(product => Object.assign(product, getProductById(product.id)))
-    order.weight = computeWeight(productsInfo)
-    order.price = computePrice(productsInfo)
+    order.productsList.map(product => Object.assign(product.product, getProductById(product.product.id)))
+    order.weight = computeWeight(order.productsList)
+    order.price = computePrice(order.productsList)
     order.shipmentAmount = calculateShippingAmount(order.weight)
     order.totalAmount = applyDiscount(order.price + order.shipmentAmount)
     return order
@@ -13,15 +13,15 @@ function updateTotals (getProductById) {
 
 function computeWeight (productsInfo) {
   return productsInfo.reduce(
-    (a, b) => a.weight * a.quantity + b.weight * b.quantity,
-    {weight: 0, quantity: 0}
+    (a, b) => a.product.weight * a.quantity + b.product.weight * b.quantity,
+    {product: {weight: 0}, quantity: 0}
   )
 }
 
 function computePrice (productsInfo) {
   return productsInfo.reduce(
-    (a, b) => a.price * a.quantity + b.price * b.quantity,
-    {price: 0, quantity: 0}
+    (a, b) => a.product.price * a.quantity + b.product.price * b.quantity,
+    {product:{price: 0}, quantity: 0}
   )
 }
 

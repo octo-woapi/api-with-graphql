@@ -1,7 +1,6 @@
 const addModule = require('../../../products/usecase/add')
-const type = require('../../../server/types/graphqlObjectType')
 
-describe('.add(:fileHandler, :alreadyExist, :Product)', () => {
+describe('.add(:fileHandler, :alreadyExist)', () => {
   describe('When everything is fine', () => {
     it('calls write', () => {
       const name = 'pineapple'
@@ -12,7 +11,7 @@ describe('.add(:fileHandler, :alreadyExist, :Product)', () => {
         }
       }
       const alreadyExist = jest.fn()
-      const {add} = addModule(fileHandlers.products, alreadyExist, type)
+      const {add} = addModule(fileHandlers.products, alreadyExist)
       add(name)
       expect(fileHandlers.products.write).toBeCalled()
     })
@@ -25,9 +24,9 @@ describe('.add(:fileHandler, :alreadyExist, :Product)', () => {
         }
       }
       const alreadyExist = jest.fn()
-      const {add} = addModule(fileHandlers.products, alreadyExist, type)
+      const {add} = addModule(fileHandlers.products, alreadyExist)
       const result = await add(name)
-      expect(result.name).toEqual(name)
+      expect(result[0].name).toEqual(name)
     })
   })
 })

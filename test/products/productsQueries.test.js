@@ -87,34 +87,27 @@ describe('Products', () => {
         request({
           url: `http://localhost:${PORT}/graphql`,
           method: "POST",
-          json: true,
-          headers: {
-            "content-type": "application/json",
-          },
-          body: data
+          json: data
         }, (err, res) => {
           if (err) console.log(err)
-          expect(res.body.data.createProduct.name).toEqual(newProduct.name)
+          expect(res.body.data.createProduct[3].name).toEqual(newProduct.name)
           done()
         })
       })
     })
     describe('updateProduct', () => {
       describe('when products does not exist', () => {
-        it('do something', (done) => {
+        it('throws "The product does not exist" error', (done) => {
           const newProduct = {name: "banana", price: 2}
           const data = { "query": `mutation { updateProduct(id: 5, name: "${newProduct.name}", 
                           price: ${newProduct.price}) {id name}}`}
           request({
             url: `http://localhost:${PORT}/graphql`,
             method: "POST",
-            json: true,
-            headers: {
-              "content-type": "application/json",
-            },
-            body: data
+            json: data
           }, (err, res) => {
             if (err) console.log(err)
+            console.log(res.body)
             expect(res.body.errors[0].message).toEqual('The product does not exist')
             done()
           })
@@ -123,19 +116,19 @@ describe('Products', () => {
       describe('when everything fine', () => {
         it('update the product with specified infos', (done) => {
           const newProduct = {id: 0, name: "pineapple", price: 2}
-          const data = { "query": `mutation { updateProduct(id: 0, name: "${newProduct.name}", 
-                          price: ${newProduct.price}) {id name price}}`}
+          const data = `mutation { updateProduct(id: 0, name: "${newProduct.name}", 
+                          price: ${newProduct.price}) {id name price}}`
+          //Example of alternative to request graphql server with content type application/graphql
           request({
             url: `http://localhost:${PORT}/graphql`,
             method: "POST",
-            json: true,
             headers: {
-              "content-type": "application/json",
+              "content-type": "application/graphql"
             },
             body: data
           }, (err, res) => {
             if (err) console.log(err)
-            expect(res.body.data.updateProduct).toEqual(newProduct)
+            expect(JSON.parse(res.body).data.updateProduct[0]).toEqual(newProduct)
             done()
           })
         })
@@ -148,11 +141,7 @@ describe('Products', () => {
           request({
             url: `http://localhost:${PORT}/graphql`,
             method: "POST",
-            json: true,
-            headers: {
-              "content-type": "application/json",
-            },
-            body: data
+            json: data
           }, (err, res) => {
             if (err) console.log(err)
             expect(res.body.data.deleteProduct[0].id).toEqual(1)
@@ -166,11 +155,7 @@ describe('Products', () => {
           request({
             url: `http://localhost:${PORT}/graphql`,
             method: "POST",
-            json: true,
-            headers: {
-              "content-type": "application/json",
-            },
-            body: data
+            json: data
           }, (err, res) => {
             if (err) console.log(err)
             expect(res.body.data.deleteProduct[0].id).toEqual(0)

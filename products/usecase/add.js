@@ -1,23 +1,23 @@
-function add(fileHandler, alreadyExist, {Product}) {
+function add(fileHandler, alreadyExist) {
   return async (name, price, weight) => {
-    const productsList = fileHandler.read()
+    const products = fileHandler.read()
     let id = 0
-    while (alreadyExist(productsList, id)) {
+    while (alreadyExist(products, id)) {
       id++
     }
-    productsList.push({
+    products.push({
       'id': id,
       'name': name,
       'price': price,
       'weight': weight
     })
-    await fileHandler.write(productsList)
-    return new Product(id, name, weight, price)
+    await fileHandler.write(products)
+    return products
   }
 }
 
-module.exports = (fileHandler, alreadyExist, Product) => {
+module.exports = (fileHandler, alreadyExist) => {
   return {
-    add: add(fileHandler, alreadyExist, Product)
+    add: add(fileHandler, alreadyExist)
   }
 }

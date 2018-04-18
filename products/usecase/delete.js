@@ -1,20 +1,19 @@
-function deleteProduct (fileHandler, {Product}) {
+function deleteProduct (fileHandler) {
   return (id) => {
     const products = fileHandler.read()
-    const objectList = products.map((product) => (new Product(product.id, product.name, product.weight, product.price)))
-    if (!id) return objectList
+    if (!id) return products
     const productIndex = products.findIndex((product) => {
       return product.id === parseInt(id)
     })
-    if (productIndex === -1) return objectList
-    objectList.splice(productIndex, 1)
+    if (productIndex === -1) return products
+    products.splice(productIndex, 1)
     fileHandler.write(products)
-    return objectList
+    return products
   }
 }
 
-module.exports = (fileHandler, type) => {
+module.exports = (fileHandler) => {
   return {
-    deleteProduct: deleteProduct(fileHandler, type)
+    deleteProduct: deleteProduct(fileHandler)
   }
 }

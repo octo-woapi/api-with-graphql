@@ -1,23 +1,19 @@
-function billResolver (fileHandler, Bill, getById) {
+function billResolver (fileHandler, getById) {
   return (id) => {
-    const bill = getById(id)
-    return new Bill(id, bill.createdAt, bill.orderId, bill.amount)
+    return getById(id)
   }
 }
 
-function billListResolver (fileHandler, Bill, pagination) {
+function billListResolver (fileHandler, pagination) {
   return (first, after) => {
-    const bills = []
-    fileHandler.read().forEach((bill) => {
-      bills.push(new Bill(bill.id, bill.createdAt, bill.orderId, bill.amount))
-    })
+    const bills = fileHandler.read()
     return pagination(bills, first, after)
   }
 }
 
-module.exports = (fileHandler, Bill, pagination, getById) => {
+module.exports = (fileHandler, pagination, getById) => {
   return {
-    billResolver: billResolver(fileHandler, Bill, getById),
-    billListResolver: billListResolver(fileHandler, Bill, pagination)
+    billResolver: billResolver(fileHandler, getById),
+    billListResolver: billListResolver(fileHandler, pagination)
   }
 }

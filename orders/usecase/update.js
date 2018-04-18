@@ -6,8 +6,8 @@ function update(fileHandler, updateTotalsList, createBill) {
     })
     const statusBefore = orders[orderIndex].status
     Object.assign(orders[orderIndex], orderData)
-    await fileHandler.write(orders)
     orders = updateTotalsList(orders)
+    await fileHandler.write(orders)
     if (statusBefore === 'pending' && orderData.status === 'paid') {
       await createBill(orderId)
     }

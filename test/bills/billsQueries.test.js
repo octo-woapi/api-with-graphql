@@ -1,5 +1,4 @@
 const request = require('request')
-const server = require('../../server/server')
 
 const {startApi, deleteAllOrders, deleteAllBills, addOrder, updateOrder} = require('../helpers')
 const PORT = 4000
@@ -9,7 +8,7 @@ startApi(PORT)
 beforeAll(async () => {
   await deleteAllOrders()
   await deleteAllBills()
-  await addOrder([{id: 1, name: 'orange', quantity: 100}])
+  await addOrder(1, 100)
   await updateOrder(0, {status: 'paid'})
 })
 
@@ -27,7 +26,7 @@ describe('Bills', () => {
       request({url: `http://localhost:${PORT}/graphql`, method: 'POST',
         json: {"query": "{bills{id orderId amount}}"}}, (err, res) => {
         if (err) console.log(err)
-        expect(res.body.data.bills[0].orderId).toBe(1)
+        expect(res.body.data.bills[0].orderId).toBe(0)
         done()
       })
     })

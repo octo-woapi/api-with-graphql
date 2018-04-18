@@ -17,7 +17,7 @@ describe('update(:fileHandler, :updateTotalsList, :createBill)', () => {
       update(orderId, orderData)
       expect(fileHandlers.orders.read).toBeCalled()
     })
-    it('calls fileHandlers.write', () => {
+    it('calls fileHandlers.write', async () => {
       const fileHandlers = {
         orders: {
           read: jest.fn(() => [{id: 1, value: orderData}]),
@@ -29,7 +29,7 @@ describe('update(:fileHandler, :updateTotalsList, :createBill)', () => {
       const updateTotalsList = jest.fn((orders) => orders)
       const createBill = jest.fn()
       const {update} = updateModule(fileHandlers.orders, updateTotalsList, createBill)
-      update(orderId, orderData)
+      await update(orderId, orderData)
       expect(fileHandlers.orders.write).toBeCalled()
     })
     it('returns orders', async () => {

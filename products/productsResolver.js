@@ -1,23 +1,19 @@
-function productResolver (fileHandler, {Product}, getById) {
+function productResolver (fileHandler, getById) {
     return (id) => {
-        const product = getById(id)
-        return new Product(id, product.name, product.weight, product.price)
+        return getById(id)
     }
 }
 
-function productsResolver (fileHandler, {Product}, pagination) {
+function productsResolver (fileHandler, pagination) {
     return (first, after) => {
-        const products = []
-        fileHandler.read().forEach((product) => {
-            products.push(new Product(product.id, product.name, product.weight, product.price))
-        })
+        const products = fileHandler.read()
         return pagination(products, first, after)
     }
 }
 
-module.exports = (fileHandler, type, pagination, getById) => {
+module.exports = (fileHandler, pagination, getById) => {
     return {
-        productResolver: productResolver(fileHandler, type, getById),
-        productsResolver: productsResolver(fileHandler, type, pagination)
+        productResolver: productResolver(fileHandler, getById),
+        productsResolver: productsResolver(fileHandler, pagination)
     }
 }

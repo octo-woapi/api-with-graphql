@@ -13,26 +13,26 @@ const fileHandlers = {
   bills: fileHandler(conf.data.bills)
 }
 
-const type = require('./types/graphqlObjectType')
-
 const getProductById = require('../products/usecase/getById')(fileHandlers.products).getById
 const getOrderById = require('../orders/usecase/getById')(fileHandlers.orders).getById
 const getBillById = require('../orders/usecase/getById')(fileHandlers.bills).getById
 
 const {productResolver, productsResolver} = require('../products/' +
-  'productsResolver')(fileHandlers.products, type, pagination, getProductById)
+  'productsResolver')(fileHandlers.products, pagination, getProductById)
 const {orderResolver, ordersResolver} = require('../orders/' +
-  'ordersResolver')(fileHandlers.orders, type, pagination, getOrderById)
-const {billResolver, billListResolver} = require('../bills/billsResolver')(fileHandlers.bills, type, pagination,
+  'ordersResolver')(fileHandlers.orders, pagination, getOrderById)
+const {billResolver, billListResolver} = require('../bills/billsResolver')(fileHandlers.bills, pagination,
   getBillById)
 const alreadyExist = require('../server/validator/alreadyExist')
 const {updateTotals} = require('../orders/domain/updateTotals')(getProductById)
 const {updateTotalsList} = require('../orders/domain/updateTotalsList')(updateTotals)
-const addProduct = require('../products/usecase/add')(fileHandlers.products, alreadyExist, type).add
-const updateProduct = require('../products/usecase/update')(fileHandlers.products, type).update
-const {deleteProduct} = require('../products/usecase/delete')(fileHandlers.products, type)
-const addOrder = require('../orders/usecase/add')(fileHandlers.orders, type, alreadyExist, updateTotalsList).add
+const addProduct = require('../products/usecase/add')(fileHandlers.products, alreadyExist).add
+const updateProduct = require('../products/usecase/update')(fileHandlers.products).update
+const {deleteProduct} = require('../products/usecase/delete')(fileHandlers.products)
+const addOrder = require('../orders/usecase/add')(fileHandlers.orders, alreadyExist, updateTotalsList).add
 const {Date} = require('./types/customScalarType')
+const createBill = require('../bills/usecase/add')(fileHandlers.bills, getOrderById).add
+const updateOrder = require('../orders/usecase/update')(fileHandlers.orders, updateTotalsList, createBill).update
 
 const resolvers = {
   Query: {
@@ -45,9 +45,8 @@ const resolvers = {
     bills: (_, {first, after}) => billListResolver(first, after)
   },
   Mutation: {
-    createProduct: async (_, {name, price, weight}) => {
-      const product = await addProduct(name, price, weight)
-      return product
+    createProduct: (_, {name, price, weight}) => {
+      return addProduct(name, price, weight)
     },
     updateProduct: (_, {id, name, price, weight}) => {
       try {
@@ -75,9 +74,9 @@ const graphqlHTTP = require('express-graphql')
 
 const app = express();
 
-app.use('/graphql', graphqlHTTP((request) => ({
+app.use('/graphql', graphqlHTTP({
   schema: schema,
   graphiql: true
-})))
+}))
 
 module.exports = app

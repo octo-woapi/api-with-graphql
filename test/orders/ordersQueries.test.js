@@ -88,25 +88,18 @@ describe('Mutation', () => {
       it('adds the order in the list', (done) => {
         const data = {"query": `mutation {createOrder(productId: 1, quantity: 100) {id productsList {
               product {id name}
-              quantity
-            }
-          }
-}       `}
+              quantity}}}`}
         request({
           url: `http://localhost:${PORT}/graphql`,
           method: "POST",
-          json: true,
-          headers: {
-            "content-type": "application/json",
-          },
-          body: data
+          json: data
         }, (err, res) => {
           if (err) console.log(err)
+          console.log(res.body.data.createOrder[0])
           expect(res.body.data.createOrder[0].productsList[0].product.id).toEqual(1)
           done()
         })
       })
     })
   })
-  describe('when ')
 })
