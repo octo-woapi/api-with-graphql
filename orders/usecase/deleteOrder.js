@@ -1,7 +1,7 @@
 function deleteOrder (fileHandler) {
   return (id) => {
     const orders = fileHandler.read()
-    if (!id) return orders
+    if (id === undefined || id === null) return orders
     const orderIndex = orders.findIndex((order) => {
       return order.id === parseInt(id)
     })

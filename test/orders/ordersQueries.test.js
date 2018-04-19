@@ -201,7 +201,7 @@ describe('Mutation', () => {
   })
   describe('removeProductInOrder', () => {
     describe('when everything is fine', () => {
-      it ('returns orders without the specified products', (done) => {
+      it ('returns orders without the specified product', (done) => {
         const data = {"query": `mutation {removeProductInOrder(orderId: 0, productId: 1) 
            {id productsList {product {id name} quantity}}}`}
         request({
@@ -211,6 +211,22 @@ describe('Mutation', () => {
         }, (err, res) => {
           if (err) console.log(err)
           expect(res.body.data.removeProductInOrder[0].productsList.length).toEqual(0)
+          done()
+        })
+      })
+    })
+  })
+  describe('deleteOrder', () => {
+    describe('when everything is fine', () => {
+      it('returns orders without the specified order', (done) => {
+        const data = {"query": `mutation {deleteOrder(id: 0){id}}`}
+        request({
+          url: `http://localhost:${PORT}/graphql`,
+          method: "POST",
+          json: data
+        }, (err, res) => {
+          if (err) console.log(err)
+          expect(res.body.data.deleteOrder.length).toEqual(0)
           done()
         })
       })

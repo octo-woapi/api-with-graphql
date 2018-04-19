@@ -16,7 +16,7 @@ type Mutation {
     updateStatus(orderId: Int!, status: String!): [Order]
     addProductInOrder(orderId: Int!, productId: Int!, quantity: Int!): [Order]
     removeProductInOrder(orderId: Int!, productId: Int!): [Order]
-    deleteOrder(id: Int!): String
+    deleteOrder(id: Int!): [Order]
 }
 
 type Product {

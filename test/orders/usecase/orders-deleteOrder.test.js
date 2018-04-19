@@ -8,7 +8,7 @@ describe('deleteOrder(:fileHandler, :id)', () => {
       const fileHandlers = {orders: {read: jest.fn(() => oldList), write: jest.fn()}}
       const {deleteOrder} = deleteOrderModule(fileHandlers.orders)
       const newList = deleteOrder(id)
-      expect(newList).toEqual(oldList.splice(0, 1))
+      expect(newList.length).toEqual(0)
     })
   })
   describe('when id is undefined', () => {

@@ -35,6 +35,7 @@ const {Date} = require('./types/customScalarType')
 const createBill = require('../bills/usecase/add')(fileHandlers.bills, getOrderById).add
 const updateOrder = require('../orders/usecase/update')(fileHandlers.orders, isValidOrder, updateTotalsList, createBill).update
 const deleteProductInOrder = require('../orders/usecase/deleteProduct')(fileHandlers.orders).deleteProduct
+const {deleteOrder} = require('../orders/usecase/deleteOrder')(fileHandlers.orders)
 
 const resolvers = {
   Query: {
@@ -72,6 +73,9 @@ const resolvers = {
     },
     removeProductInOrder: (_, {orderId, productId}) => {
       return deleteProductInOrder(orderId, productId)
+    },
+    deleteOrder: (_, {id}) => {
+      return deleteOrder(id)
     }
   },
   Date: Date
