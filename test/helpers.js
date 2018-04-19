@@ -14,6 +14,7 @@ const getOrderById = require('../orders/usecase/getById')(fileHandlers.orders).g
 const {updateTotals} = require('../orders/domain/updateTotals')(getProductById)
 const {updateTotalsList} = require('../orders/domain/updateTotalsList')(updateTotals)
 const alreadyExist = require('../server/validator/alreadyExist')
+const isValidOrder = require('../orders/validator/isValidOrder')
 
 const deleteAllBills = require('../server/tools/deleteAll')(fileHandlers.bills).deleteAll
 const addOrder = require('../orders/usecase/add')(fileHandlers.orders, alreadyExist, updateTotalsList).add
@@ -21,7 +22,7 @@ const deleteAllOrders = require('../server/tools/deleteAll')(fileHandlers.orders
 const addProduct = require('../products/usecase/add')(fileHandlers.products, alreadyExist).add
 const deleteAllProducts = require('../server/tools/deleteAll')(fileHandlers.products).deleteAll
 const createBill = require('../bills/usecase/add')(fileHandlers.bills, getOrderById).add
-const updateOrder = require('../orders/usecase/update')(fileHandlers.orders, updateTotalsList, createBill).update
+const updateOrder = require('../orders/usecase/update')(fileHandlers.orders, isValidOrder, updateTotalsList, createBill).update
 
 const startApi = (PORT) => {
   beforeAll((done) => {

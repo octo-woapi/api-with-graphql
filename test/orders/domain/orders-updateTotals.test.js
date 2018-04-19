@@ -13,13 +13,13 @@ describe('updateTotals(:order, :getProductById)', () => {
     it('calculates total weight', () => {
       const quantity = 1000
       const productWeight = 0.2
-      const order = {productsList: [{product: {id: 1, name: 'banana'}, quantity: quantity}]}
+      const order = {productsList: [{product: {id: 1, name: 'banana'}, quantity: quantity}, {product: {id: 0, name: 'orange'}, quantity: quantity}]}
       const getProductById = jest.fn(() => {
         return {id: 0, name: 'banana', price: 2, weight: productWeight}
       })
       const {updateTotals} = updateTotalsModule(getProductById)
       const updatedWeight = updateTotals(order, getProductById).weight
-      expect(updatedWeight).toEqual(quantity * productWeight)
+      expect(updatedWeight).toEqual(quantity * productWeight * 2)
     })
     it('calculates total price', () => {
       const quantity = 1000

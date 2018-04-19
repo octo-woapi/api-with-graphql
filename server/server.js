@@ -26,13 +26,14 @@ const {billResolver, billListResolver} = require('../bills/billsResolver')(fileH
 const alreadyExist = require('../server/validator/alreadyExist')
 const {updateTotals} = require('../orders/domain/updateTotals')(getProductById)
 const {updateTotalsList} = require('../orders/domain/updateTotalsList')(updateTotals)
+const isValidOrder = require('../orders/validator/isValidOrder')
 const addProduct = require('../products/usecase/add')(fileHandlers.products, alreadyExist).add
 const updateProduct = require('../products/usecase/update')(fileHandlers.products).update
 const {deleteProduct} = require('../products/usecase/delete')(fileHandlers.products)
 const addOrder = require('../orders/usecase/add')(fileHandlers.orders, alreadyExist, updateTotalsList).add
 const {Date} = require('./types/customScalarType')
 const createBill = require('../bills/usecase/add')(fileHandlers.bills, getOrderById).add
-const updateOrder = require('../orders/usecase/update')(fileHandlers.orders, updateTotalsList, createBill).update
+const updateOrder = require('../orders/usecase/update')(fileHandlers.orders, isValidOrder, updateTotalsList, createBill).update
 
 const resolvers = {
   Query: {
@@ -63,6 +64,10 @@ const resolvers = {
     },
     updateStatus: (_, {orderId, status}) => {
       return updateOrder(orderId, {status: status})
+    },
+    addProductInOrder: (_, {orderId, productId, quantity}) => {
+      const productsList = [{product: {id: productId}, quantity:quantity}]
+      return updateOrder(orderId, {productsList: productsList})
     }
   },
   Date: Date

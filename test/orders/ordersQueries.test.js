@@ -105,7 +105,7 @@ describe('Mutation', () => {
   })
   describe('updateStatus', () => {
     describe('when order does not exist', () => {
-      it('throws an error', (done) => {
+      it('throws undefined ID error', (done) => {
         const invalidId = 5
         const data = {"query": `mutation {updateStatus(orderId: ${invalidId}, status: "paid") {id}}`}
         request({
@@ -115,6 +115,21 @@ describe('Mutation', () => {
         }, (err, res) => {
           if (err) console.log(err)
           expect(res.body.errors[0].message).toEqual(`Order with the id: ${invalidId} is undefined`)
+          done()
+        })
+      })
+    })
+    describe('when status is not a valid status', () => {
+      it('throws invalid status error', (done) => {
+        const invalidStatus = 'invalid'
+        const data = {"query": `mutation {updateStatus(orderId: 0, status: "${invalidStatus}") {id}}`}
+        request({
+          url: `http://localhost:${PORT}/graphql`,
+          method: "POST",
+          json: data
+        }, (err, res) => {
+          if (err) console.log(err)
+          expect(res.body.errors[0].message).toEqual(`"${invalidStatus}" is not an allowed state for status`)
           done()
         })
       })
@@ -147,6 +162,39 @@ describe('Mutation', () => {
             expect(fileHandlers.bills.read().length).toEqual(1)
             done()
           })
+        })
+      })
+      describe('when status is set to pending or cancel', () => {
+        it('does not create a bill', (done) => {
+          const newStatus = 'cancel'
+          const data = {"query": `mutation {updateStatus(orderId: 0, status: "${newStatus}") {status}}`}
+          request({
+            url: `http://localhost:${PORT}/graphql`,
+            method: "POST",
+            json: data
+          }, (err, res) => {
+            if (err) console.log(err)
+            expect(fileHandlers.bills.read().length).toEqual(0)
+            done()
+          })
+        })
+      })
+    })
+  })
+  describe('addProductInOrder', () => {
+    describe('when everything is fine', () => {
+      it('returns orders with the new product', (done) => {
+        const productId = 0
+        const data = {"query": `mutation {addProductInOrder(orderId: 0, productId: ${productId}, quantity: 1000) 
+           {id productsList {product {id name} quantity}}}`}
+        request({
+          url: `http://localhost:${PORT}/graphql`,
+          method: "POST",
+          json: data
+        }, (err, res) => {
+          if (err) console.log(err)
+          expect(res.body.data.addProductInOrder[0].productsList.length).toEqual(2)
+          done()
         })
       })
     })

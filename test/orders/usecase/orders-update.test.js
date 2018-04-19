@@ -20,11 +20,11 @@ describe('update(:fileHandler, :updateTotalsList, :createBill)', () => {
     it('calls fileHandlers.write', async () => {
       const fileHandlers = {
         orders: {
-          read: jest.fn(() => [{id: 1, value: orderData}]),
+          read: jest.fn(() => [{id: 1, productsList: []}]),
           write: jest.fn()
         }
       }
-      const orderData = '{}'
+      const orderData = {productsList: []}
       const orderId = 1
       const updateTotalsList = jest.fn((orders) => orders)
       const createBill = jest.fn()
@@ -44,7 +44,8 @@ describe('update(:fileHandler, :updateTotalsList, :createBill)', () => {
       }
       const updateTotalsList = jest.fn((orders) => orders)
       const createBill = jest.fn()
-      const {update} = updateModule(fileHandlers.orders, updateTotalsList, createBill)
+      const isValidOrder = jest.fn()
+      const {update} = updateModule(fileHandlers.orders, isValidOrder, updateTotalsList, createBill)
       const result = await update(orderId, orderData)
       expect(orders).toEqual(result)
     })
@@ -62,7 +63,9 @@ describe('update(:fileHandler, :updateTotalsList, :createBill)', () => {
       }
       const updateTotalsList = jest.fn((orders) => orders)
       const createBill = jest.fn()
-      const {update} = updateModule(fileHandlers.orders, updateTotalsList, createBill)
+      const isValidOrder = jest.fn()
+      console.log(createBill)
+      const {update} = updateModule(fileHandlers.orders, isValidOrder, updateTotalsList, createBill)
       const updatedOrders = await update(orderId, orderData)
       expect(updatedOrders[0].status).toEqual(orderData.status)
     })
@@ -78,11 +81,12 @@ describe('update(:fileHandler, :updateTotalsList, :createBill)', () => {
       }
       const updateTotalsList = jest.fn((orders) => orders)
       const createBill = jest.fn()
-      const {update} = updateModule(fileHandlers.orders, updateTotalsList, createBill)
+      const isValidOrder = jest.fn()
+      const {update} = updateModule(fileHandlers.orders, isValidOrder, updateTotalsList, createBill)
       const updatedOrders = await update(orderId, orderData)
       expect(orders[0].status).toEqual(updatedOrders[0].status)
     })
-    it('overwrites productList when specified', async () => {
+    it('add product in productList when specified', async () => {
       const orderId = 1
       const orderData = {productsList: []}
       const orders = [{id: 1, productsList: [{id: 1, name: 'banana'}], status: 'paid'}]
@@ -94,9 +98,10 @@ describe('update(:fileHandler, :updateTotalsList, :createBill)', () => {
       }
       const updateTotalsList = jest.fn((orders) => orders)
       const createBill = jest.fn()
-      const {update} = updateModule(fileHandlers.orders, updateTotalsList, createBill)
+      const isValidOrder = jest.fn()
+      const {update} = updateModule(fileHandlers.orders, isValidOrder, updateTotalsList, createBill)
       const updatedOrders = await update(orderId, orderData)
-      expect(updatedOrders[0].productsList).toEqual(orderData.productsList)
+      expect(updatedOrders[0].productsList).toEqual(orders[0].productsList)
     })
   })
 })

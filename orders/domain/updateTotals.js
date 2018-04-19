@@ -12,16 +12,17 @@ function updateTotals (getProductById) {
 }
 
 function computeWeight (productsInfo) {
-  return productsInfo.reduce(
-    (a, b) => a.product.weight * a.quantity + b.product.weight * b.quantity,
-    {product: {weight: 0}, quantity: 0}
+  const result = productsInfo.reduce(
+    (a, b) => a + b.product.weight * b.quantity,
+    0
   )
+  return result
 }
 
 function computePrice (productsInfo) {
   return productsInfo.reduce(
-    (a, b) => a.product.price * a.quantity + b.product.price * b.quantity,
-    {product:{price: 0}, quantity: 0}
+    (a, b) => a + b.product.price * b.quantity,
+    0
   )
 }
 
