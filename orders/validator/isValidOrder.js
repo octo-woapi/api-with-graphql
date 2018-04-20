@@ -8,8 +8,9 @@ function isProductListValid (productsList) {
 
 function isStatusValid (status) {
   const AUTHORIZED_STATUS = ['pending', 'cancel', 'paid']
-  if (!AUTHORIZED_STATUS.indexOf(status.toLowerCase()) > -1)
+  if (!AUTHORIZED_STATUS.includes(status)) {
     throw new InvalidOrderFormatError(`"${status}" is not an allowed state for status`)
+  }
   return true
 }
 

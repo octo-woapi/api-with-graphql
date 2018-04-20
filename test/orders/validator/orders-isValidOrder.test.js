@@ -22,7 +22,7 @@ describe('isValidOrder(:orderData)', () => {
   })
   describe('when orderData.status is different of pending, cancel or paid', () => {
     it('throws invalidOrderFormatError', () => {
-      const orderData = {id: 1, productsList: [], status: 'fake'}
+      const orderData = {id: 1, status: 'fake'}
       expect(() => {
         isValidOrder(orderData)
       }).toThrow(new InvalidOrderFormatError(`"${orderData.status}" is not an allowed state for status`))

@@ -14,7 +14,7 @@ const getOrderById = require('../orders/usecase/getById')(fileHandlers.orders).g
 const {updateTotals} = require('../orders/domain/updateTotals')(getProductById)
 const {updateTotalsList} = require('../orders/domain/updateTotalsList')(updateTotals)
 const alreadyExist = require('../server/validator/alreadyExist')
-const isValidOrder = require('../orders/validator/isValidOrder')
+const {isValidOrder} = require('../orders/validator/isValidOrder')
 
 const deleteAllBills = require('../server/tools/deleteAll')(fileHandlers.bills).deleteAll
 const addOrder = require('../orders/usecase/add')(fileHandlers.orders, alreadyExist, updateTotalsList).add

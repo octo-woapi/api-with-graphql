@@ -8,7 +8,8 @@ function update(fileHandler, isValidOrder, updateTotalsList, createBill) {
     if (orderIndex === -1) throw new InvalidOrderError(`Order with the id: ${orderId} is undefined`)
     const statusBefore = orders[orderIndex].status
     orders[orderIndex].status = orderData.status
-    orders[orderIndex].productsList = orders[orderIndex].productsList.concat(orderData.productsList)
+    if (orderData.productsList)
+      orders[orderIndex].productsList = orders[orderIndex].productsList.concat(orderData.productsList)
     orders = updateTotalsList(orders)
     await fileHandler.write(orders)
     if (statusBefore === 'pending' && orderData.status === 'paid') {
