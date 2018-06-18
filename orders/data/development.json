@@ -3,11 +3,13 @@
     "id": 0,
     "productsList": [
       {
-        "id": 1,
-        "quantity": 100,
-        "name": "orange",
-        "price": 1.5,
-        "weight": 0.3
+        "product": {
+          "id": 1,
+          "name": "orange",
+          "price": 1.5,
+          "weight": 0.3
+        },
+        "quantity": 100
       }
     ],
     "status": "pending",
