@@ -1,6 +1,28 @@
 # API with GraphQL
 
-This project implements the [katapi](https://github.com/octo-woapi/katapi) (description below) in order to compare a GraphQL API to a REST API (https://github.com/octo-woapi/api-poc).
+This project implements the [katapi](https://github.com/octo-woapi/katapi) (description below) in order to compare a [GraphQL](https://graphql.org/) API to a REST API (https://github.com/octo-woapi/api-poc).
+
+## Installation
+
+```
+$ npm install
+$ npm start #default port is 4000
+```
+Then, since [GraphiQL](https://github.com/graphql/graphiql) is activated, you can access it on `/graphql`.
+
+## Developping
+
+WARNING: This project is far from perfect and more for curiosity use only, refactoring in progress.
+
+Run all tests using [JEST](https://jestjs.io/)
+```
+$ npm test
+```
+
+Watch mode with [Nodemon](https://nodemon.io/)
+```
+$ npm run watch
+```
 
 ## Katapi
 
