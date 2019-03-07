@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "NODE_ENV=test jest test",
+    "test": "NODE_ENV=test && npm run test:unit && npm run test:integration",
+    "test:integration": "jest test/*/*.test.js --runInBand",
+    "test:unit": "jest test/*/*/*.test.js",
     "watch": "nodemon index.js",
     "start": "NODE_ENV=development node index.js"
   },
@@ -17,7 +19,7 @@
     "graphql": "^0.13.2",
     "graphql-import": "^0.4.5",
     "graphql-tools": "^2.23.1",
-    "jest": "^22.4.3",
+    "jest": "^24.1.0",
     "request": "^2.88.0"
   },
   "jest": {
@@ -25,6 +27,6 @@
     "bail": true
   },
   "devDependencies": {
-    "nodemon": "^1.18.6"
+    "nodemon": "^1.18.10"
   }
 }
