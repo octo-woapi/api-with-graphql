@@ -1,6 +1,7 @@
 # API with GraphQL
 
-This project implements the [katapi](https://github.com/octo-woapi/katapi) (description below) in order to compare a [GraphQL](https://graphql.org/) API to a REST API (https://github.com/octo-woapi/api-poc).
+This project implements the [katapi](https://github.com/octo-woapi/katapi) (description below) in order to compare a [GraphQL](https://graphql.org/) API to a REST API (https://github.com/octo-woapi/api-poc).  
+You can find a deploy version of this project on heroku: https://octo-woapi-graphql.herokuapp.com/graphql
 
 ## Installation
 
