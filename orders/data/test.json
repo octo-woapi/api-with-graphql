@@ -1,1 +1,1 @@
-[{"id":0,"productsList":[{"product":{"id":1,"name":"orange","price":1.5,"weight":0.3},"quantity":100}],"status":"pending","weight":30,"price":150,"shipmentAmount":100,"totalAmount":250}]
+[{"id":0,"productsList":[{"product":{"id":1,"name":"orange","price":1.5,"weight":0.3},"quantity":100}],"status":"paid","weight":30,"price":150,"shipmentAmount":100,"totalAmount":250}]

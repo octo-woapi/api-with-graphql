@@ -8,7 +8,7 @@ const fileHandler = require('../../server/tools/fileHandler')
 const conf = require('../../server/conf')['test']
 const fileHandlers = {products: fileHandler(conf.data.products)}
 
-beforeAll(async () => {
+beforeEach(async () => {
   await deleteAllProducts()
   await addProduct('banana', 2, 0.2)
   await addProduct('orange', 1.5, 0.3)
@@ -22,7 +22,7 @@ describe('Products', () => {
         url: `http://localhost:${PORT}/graphql`, method: 'POST',
         json: {"query": "{products{id}}"}
       }, (err, res) => {
-        if (err) console.log(err)
+        if (err) console.error(err)
         expect(res.statusCode).toBe(200)
         done()
       })
@@ -32,7 +32,7 @@ describe('Products', () => {
         url: `http://localhost:${PORT}/graphql`, method: 'POST',
         json: {"query": "{products{id name}}"}
       }, (err, res) => {
-        if (err) console.log(err)
+        if (err) console.error(err)
         expect(res.body.data.products.length).toBe(fileHandlers.products.read().length)
         done()
       })
@@ -44,7 +44,7 @@ describe('Products', () => {
           url: `http://localhost:${PORT}/graphql`, method: 'POST',
           json: {"query": `{products(first:${first}){id}}`}
         }, (err, res) => {
-          if (err) console.log(err)
+          if (err) console.error(err)
           expect(res.body.data.products.length).toBe(first)
           done()
         })
@@ -57,7 +57,7 @@ describe('Products', () => {
           url: `http://localhost:${PORT}/graphql`, method: 'POST',
           json: {"query": `{products(after:${after}){id}}`}
         }, (err, res) => {
-          if (err) console.log(err)
+          if (err) console.error(err)
           expect(res.body.data.products[0].id).toBe(after)
           done()
         })
@@ -71,7 +71,7 @@ describe('Products', () => {
           url: `http://localhost:${PORT}/graphql`, method: 'POST',
           json: {"query": `{products(first:${first}, after:${after}){name}}`}
         }, (err, res) => {
-          if (err) console.log(err)
+          if (err) console.error(err)
           expect(res.body.data.products).toEqual([{"name": "orange"}, {"name": "vanilla"}])
           done()
         })
@@ -89,7 +89,7 @@ describe('Products', () => {
           method: "POST",
           json: data
         }, (err, res) => {
-          if (err) console.log(err)
+          if (err) console.error(err)
           expect(res.body.data.createProduct[3].name).toEqual(newProduct.name)
           done()
         })
@@ -106,8 +106,7 @@ describe('Products', () => {
             method: "POST",
             json: data
           }, (err, res) => {
-            if (err) console.log(err)
-            console.log(res.body)
+            if (err) console.error(err)
             expect(res.body.errors[0].message).toEqual('The product does not exist')
             done()
           })
@@ -127,7 +126,7 @@ describe('Products', () => {
             },
             body: data
           }, (err, res) => {
-            if (err) console.log(err)
+            if (err) console.error(err)
             expect(JSON.parse(res.body).data.updateProduct[0]).toEqual(newProduct)
             done()
           })
@@ -143,7 +142,7 @@ describe('Products', () => {
             method: "POST",
             json: data
           }, (err, res) => {
-            if (err) console.log(err)
+            if (err) console.error(err)
             expect(res.body.data.deleteProduct[0].id).toEqual(1)
             done()
           })
@@ -157,7 +156,7 @@ describe('Products', () => {
             method: "POST",
             json: data
           }, (err, res) => {
-            if (err) console.log(err)
+            if (err) console.error(err)
             expect(res.body.data.deleteProduct[0].id).toEqual(0)
             done()
           })

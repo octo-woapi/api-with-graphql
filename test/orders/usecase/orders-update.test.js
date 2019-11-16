@@ -64,7 +64,6 @@ describe('update(:fileHandler, :updateTotalsList, :createBill)', () => {
       const updateTotalsList = jest.fn((orders) => orders)
       const createBill = jest.fn()
       const isValidOrder = jest.fn()
-      console.log(createBill)
       const {update} = updateModule(fileHandlers.orders, isValidOrder, updateTotalsList, createBill)
       const updatedOrders = await update(orderId, orderData)
       expect(updatedOrders[0].status).toEqual(orderData.status)

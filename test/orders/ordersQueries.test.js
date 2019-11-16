@@ -4,14 +4,10 @@ const PORT = 4000
 
 startApi(PORT)
 
-beforeAll(async () => {
+beforeEach(async () => {
   await deleteAllOrders()
   await deleteAllBills()
   await addOrder(1, 100)
-})
-
-afterAll(() => {
-  server.close()
 })
 
 const fileHandler = require('../../server/tools/fileHandler')
@@ -26,7 +22,7 @@ describe('Query', () => {
         url: `http://localhost:${PORT}/graphql`, method: 'POST',
         json: {"query": "{orders{id}}"}
       }, (err, res) => {
-        if (err) console.log(err)
+        if (err) console.error(err)
         expect(res.statusCode).toBe(200)
         done()
       })
@@ -36,7 +32,7 @@ describe('Query', () => {
         url: `http://localhost:${PORT}/graphql`, method: 'POST',
         json: {"query": "{orders{id }}"}
       }, (err, res) => {
-        if (err) console.log(err)
+        if (err) console.error(err)
         expect(res.body.data.orders.length).toBe(fileHandlers.orders.read().length)
         done()
       })
@@ -48,7 +44,7 @@ describe('Query', () => {
           url: `http://localhost:${PORT}/graphql`, method: 'POST',
           json: {"query": `{orders(first:${first}){id}}`}
         }, (err, res) => {
-          if (err) console.log(err)
+          if (err) console.error(err)
           expect(res.body.data.orders.length).toBe(first)
           done()
         })
@@ -61,7 +57,7 @@ describe('Query', () => {
           url: `http://localhost:${PORT}/graphql`, method: 'POST',
           json: {"query": `{orders(after:${after}){id}}`}
         }, (err, res) => {
-          if (err) console.log(err)
+          if (err) console.error(err)
           expect(res.body.data.orders[0].id).toBe(after)
           done()
         })
@@ -75,7 +71,7 @@ describe('Query', () => {
           url: `http://localhost:${PORT}/graphql`, method: 'POST',
           json: {"query": `{orders(first:${first}, after:${after}){id}}`}
         }, (err, res) => {
-          if (err) console.log(err)
+          if (err) console.error(err)
           expect(res.body.data.orders).toEqual([{"id": 0}])
           done()
         })
@@ -95,8 +91,7 @@ describe('Mutation', () => {
           method: "POST",
           json: data
         }, (err, res) => {
-          if (err) console.log(err)
-          console.log(res.body.data.createOrder[0])
+          if (err) console.error(err)
           expect(res.body.data.createOrder[0].productsList[0].product.id).toEqual(1)
           done()
         })
@@ -113,7 +108,7 @@ describe('Mutation', () => {
           method: "POST",
           json: data
         }, (err, res) => {
-          if (err) console.log(err)
+          if (err) console.error(err)
           expect(res.body.errors[0].message).toEqual(`Order with the id: ${invalidId} is undefined`)
           done()
         })
@@ -128,7 +123,7 @@ describe('Mutation', () => {
           method: "POST",
           json: data
         }, (err, res) => {
-          if (err) console.log(err)
+          if (err) console.error(err)
           expect(res.body.errors[0].message).toEqual(`"${invalidStatus}" is not an allowed state for status`)
           done()
         })
@@ -143,7 +138,7 @@ describe('Mutation', () => {
           method: "POST",
           json: data
         }, (err, res) => {
-          if (err) console.log(err)
+          if (err) console.error(err)
           expect(res.body.data.updateStatus[0].status).toEqual(newStatus)
           done()
         })
@@ -157,8 +152,7 @@ describe('Mutation', () => {
             method: "POST",
             json: data
           }, (err, res) => {
-            if (err) console.log(err)
-            console.log(fileHandlers.bills.read())
+            if (err) console.error(err)
             expect(fileHandlers.bills.read().length).toEqual(1)
             done()
           })
@@ -173,7 +167,7 @@ describe('Mutation', () => {
             method: "POST",
             json: data
           }, (err, res) => {
-            if (err) console.log(err)
+            if (err) console.error(err)
             expect(fileHandlers.bills.read().length).toEqual(0)
             done()
           })
@@ -192,7 +186,7 @@ describe('Mutation', () => {
           method: "POST",
           json: data
         }, (err, res) => {
-          if (err) console.log(err)
+          if (err) console.error(err)
           expect(res.body.data.addProductInOrder[0].productsList.length).toEqual(2)
           done()
         })
@@ -209,7 +203,7 @@ describe('Mutation', () => {
           method: "POST",
           json: data
         }, (err, res) => {
-          if (err) console.log(err)
+          if (err) console.error(err)
           expect(res.body.data.removeProductInOrder[0].productsList.length).toEqual(0)
           done()
         })
@@ -225,7 +219,7 @@ describe('Mutation', () => {
           method: "POST",
           json: data
         }, (err, res) => {
-          if (err) console.log(err)
+          if (err) console.error(err)
           expect(res.body.data.deleteOrder.length).toEqual(0)
           done()
         })
