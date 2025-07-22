@@ -19,7 +19,7 @@
     "graphql": "^0.13.2",
     "graphql-import": "^0.4.5",
     "graphql-tools": "^2.23.1",
-    "jest": "^24.1.0",
+    "jest": "^30.0.5",
     "request": "^2.88.0"
   },
   "jest": {
