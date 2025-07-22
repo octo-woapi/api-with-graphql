@@ -27,6 +27,6 @@
     "bail": true
   },
   "devDependencies": {
-    "nodemon": "^1.18.10"
+    "nodemon": "^3.1.10"
   }
 }
