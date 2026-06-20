@@ -14,12 +14,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.22.1",
+    "express": "^5.2.1",
     "express-graphql": "^0.6.12",
     "graphql": "^0.13.2",
     "graphql-import": "^0.4.5",
     "graphql-tools": "^2.23.1",
-    "jest": "^24.1.0",
+    "jest": "^30.4.2",
     "request": "^2.88.0"
   },
   "jest": {
